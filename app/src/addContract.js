@@ -1,6 +1,6 @@
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 
-const provider = new ethers.providers.Web3Provider(ethereum);
+const provider = new ethers.BrowserProvider(window.ethereum); // ✅ v6 syntax
 
 export default async function addContract(
   id,
@@ -11,16 +11,16 @@ export default async function addContract(
 ) {
   const buttonId = `approve-${id}`;
 
-  const container = document.getElementById('container');
+  const container = document.getElementById("container");
   container.innerHTML += createHTML(buttonId, arbiter, beneficiary, value);
 
-  contract.on('Approved', () => {
-    document.getElementById(buttonId).className = 'complete';
+  contract.on("Approved", () => {
+    document.getElementById(buttonId).className = "complete";
     document.getElementById(buttonId).innerText = "✓ It's been approved!";
   });
 
-  document.getElementById(buttonId).addEventListener('click', async () => {
-    const signer = provider.getSigner();
+  document.getElementById(buttonId).addEventListener("click", async () => {
+    const signer = await provider.getSigner(); // ✅ await eklendi
     await contract.connect(signer).approve();
   });
 }
